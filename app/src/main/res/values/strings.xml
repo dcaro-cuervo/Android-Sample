@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Cuanto Cuesta?</string>
+    <string name="edit_message">Enter a Message</string>
+    <string name="mLatitudeText">Latitud</string>
+    <string name="mLongitudeText">Longitud</string>
+    <string name="lbl_you_are_at">YOU ARE AT</string>
+
+    <string name="button_send">Send</string>
+    <string name="btn_get_last_location">Show My Last Location</string>
+    <string name="btn_get_transport_list">Show Transport List</string>
+    <string name="btn_get_location">GET MY LOCATION</string>
+    <string name="btn_show_map">SHOW ON MAP</string>
+
+    <string name="title_activity_display_message">Your Message</string>
+    <string name="title_activity_show_map">Calculated Route</string>
+    <string name="title_activity_show_last_position">Your Last Position</string>
+    <string name="title_activity_show_transport_list">Transport List</string>
+</resources>

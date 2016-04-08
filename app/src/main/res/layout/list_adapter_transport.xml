@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="?android:attr/listPreferredItemHeight"
+    android:padding="6dip" >
+
+    <TextView
+        android:id="@+id/txtTransportName"
+        android:layout_width="fill_parent"
+        android:layout_height="26dip"
+        android:text="Transport Name"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="#ffc77c37" />
+
+    <TextView
+        android:id="@+id/txtTransportPhone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Phone"
+        android:layout_below="@+id/txtTransportName"
+        android:textSize="10dp" />
+
+</RelativeLayout>
