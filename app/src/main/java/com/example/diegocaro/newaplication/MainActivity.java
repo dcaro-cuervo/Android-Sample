@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
         btnLastLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, ShowTransportListActivity.class);
+                Intent intent = new Intent(context, ShowLastPositionActivity.class);
                 startActivity(intent);
             }
         });
