@@ -1,6 +1,7 @@
 package com.example.diegocaro.newaplication;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -14,25 +15,23 @@ import java.util.List;
  * Created by diego.caro on 19/04/2016.
  */
 public class DirectionsJSONParser {
-    float distanceFinal = 0;
-
     /**
      * Receives a JSONObject and return a list of lists containing latitudes and longitude
      */
-    public List<List<HashMap<String,String>>> parse(JSONObject jsonObject) {
-        List<List<HashMap<String,String>>> routes = new ArrayList<>();
+    public List<PolylineWithDistance> parse(JSONObject jsonObject) {
+        List<PolylineWithDistance> routes = new ArrayList<>();
         JSONArray jRoutes = null;
         JSONArray jLegs = null;
         JSONArray jSteps = null;
 
         try {
-            float distance;
             jRoutes = jsonObject.getJSONArray("routes");
 
             //traversing all routes
             for (int i = 0; i < jRoutes.length(); i++) {
                 jLegs = ((JSONObject)jRoutes.get(i)).getJSONArray("legs");
                 List path = new ArrayList<>();
+                Integer distanceBetweenLocations = 0;
 
                 //traversing all legs
                 for (int j = 0; j < jLegs.length(); j++) {
@@ -42,8 +41,9 @@ public class DirectionsJSONParser {
                     for (int k = 0; k < jSteps.length(); k++) {
                         String polyLine = "";
                         polyLine = (String)((JSONObject)((JSONObject)jSteps.get(k)).get("polyline")).get("points");
-                        distance = Float.parseFloat((String)((JSONObject)((JSONObject)((JSONObject)jSteps.get(k)).get("html_instructions")).get("distance")).get("value"));
-                        distanceFinal = distance + distanceFinal;
+                        Integer distance = (Integer)((JSONObject)((JSONObject)jSteps.get(k)).get("distance")).get("value");
+                        distanceBetweenLocations = distanceBetweenLocations + distance;
+
                         List<LatLng> list = decodePoly(polyLine);
 
                         //traversing all points
@@ -56,7 +56,8 @@ public class DirectionsJSONParser {
                         }
                     }
 
-                    routes.add(path);
+                    PolylineWithDistance polylineWithDistance = new PolylineWithDistance(distanceBetweenLocations, path);
+                    routes.add(polylineWithDistance);
                 }
             }
         }
@@ -105,12 +106,5 @@ public class DirectionsJSONParser {
         }
 
         return poly;
-    }
-
-    /**
-     * Method to know the distance between two Locations (sum all points distance)
-     */
-    private float getDistance() {
-        return distanceFinal;
     }
 }

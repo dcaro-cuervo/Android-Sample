@@ -115,7 +115,7 @@ public class ShowMapActivity extends FragmentActivity implements OnMapReadyCallb
             drawPoints();
             drawDrivingRouteDirections();
 
-            showDistance();
+            //showDistance();
         }
 
     }
@@ -290,12 +290,12 @@ public class ShowMapActivity extends FragmentActivity implements OnMapReadyCallb
     /**
      * A class to parse the Google Places in JSON format
      */
-    public class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<String,String>>>> {
+    public class ParserTask extends AsyncTask<String, Integer, List<PolylineWithDistance>> {
         //parsing the data in non-ui thread
         @Override
-        protected List<List<HashMap<String,String>>> doInBackground(String... jsonData) {
+        protected List<PolylineWithDistance> doInBackground(String... jsonData) {
             JSONObject jsonObject;
-            List<List<HashMap<String,String>>> routes = null;
+            List<PolylineWithDistance> routes = null;
 
             try {
                 jsonObject = new JSONObject(jsonData[0]);
@@ -315,9 +315,10 @@ public class ShowMapActivity extends FragmentActivity implements OnMapReadyCallb
          * Executes in UI thread, after the parsing process
          */
         @Override
-        protected void onPostExecute (List<List<HashMap<String,String>>> result) {
+        protected void onPostExecute (List<PolylineWithDistance> result) {
             ArrayList<LatLng> points = null;
             PolylineOptions polylineOptions = null;
+            double distanceBetweenLocations = 0;
 
             //traversing through all the routes
             for (int i = 0; i < result.size(); i++) {
@@ -325,7 +326,9 @@ public class ShowMapActivity extends FragmentActivity implements OnMapReadyCallb
                 polylineOptions = new PolylineOptions();
 
                 //fetching i-th route
-                List<HashMap<String,String>> path = result.get(i);
+                PolylineWithDistance polylineWithDistance = result.get(i);
+                List<HashMap<String,String>> path = polylineWithDistance.Polyline;
+                distanceBetweenLocations = calculatePrice(polylineWithDistance.Distance);
 
                 //fetching all the points in i-th route
                 for (int j = 0; j < path.size(); j++) {
@@ -339,12 +342,28 @@ public class ShowMapActivity extends FragmentActivity implements OnMapReadyCallb
 
                 //adding all the points in the route to LineOptions
                 polylineOptions.addAll(points);
-                polylineOptions.width(6);
-                polylineOptions.color(Color.RED);
+                polylineOptions.width(20);
+                polylineOptions.color(Color.BLUE);
             }
 
             //drawing polyline in the google map for the i-th route
             googleMap.addPolyline(polylineOptions);
+
+            TextView lblDistance = (TextView) findViewById(R.id.lblDistance);
+            lblDistance.setText("$ " + Double.toString(distanceBetweenLocations));
+        }
+
+        /**
+         * Calculate price starting with down flag add distance per block.
+         */
+        private Double calculatePrice(int distance) {
+            double downFlag = 12.5;
+            double blockPrice = 100;
+            double result;
+
+            result = downFlag + (distance/blockPrice);
+
+            return result;
         }
     }
 
